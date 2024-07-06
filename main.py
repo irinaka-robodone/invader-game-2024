@@ -2,6 +2,8 @@ import pyxel
 from pigframe import *
 from input import Input
 from screen import *
+from system import *
+from component import *
 
 class App(World):
     # ゲームのクラス
@@ -28,8 +30,22 @@ class App(World):
         self.process_screens()
 
 app = App()
-app.add_scene("Play")
+app.add_scenes(["Play", "Result"])
 app.set_user_actions_map(Input())
+
+# システムの追加
+app.add_system_to_scenes(PlayerControl, "Play")
+app.add_system_to_scenes(PlayerShoot, "Play")
+app.add_system_to_scenes(BulletMove, "Play")
+
+# スクリーンの追加
+app.add_screen_to_scenes(ScPlayer, "Play")
+app.add_screen_to_scenes(ScBullet, "Play")
+
+# ゲームに登場するオブジェクトの追加
+player = app.create_entity()
+app.add_component_to_entity(player, Player, x = 60, y = 104)
+
+# ゲームの初期状態を設定
 app.current_scene = "Play"
-app.add_screen(ScPlayer)
 app.run()
